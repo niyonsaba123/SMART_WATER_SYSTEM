@@ -25,66 +25,67 @@
         }
 
         // Fetch house balance data from Google Apps Script API (GET method)
-        async function loadHouseData(houseName) {
-            const resultDiv = document.getElementById("balanceResult");
+        // Fetch house balance data from Google Apps Script API (GET method)
+async function loadHouseData(houseName) {
+    const resultDiv = document.getElementById("balanceResult");
 
-            try {
-                const response = await fetch(${scriptURL}?action=getBalance&house=${encodeURIComponent(houseName)});
-                const data = await response.json();
+    try {
+        const response = await fetch(`${scriptURL}?action=getBalance&house=${encodeURIComponent(houseName)}`);
+        const data = await response.json();
 
-                if (data.balance !== undefined) {
-                    resultDiv.innerHTML = `
-                        <div class="alert alert-success">
-                            <strong>House:</strong> ${houseName} <br>
-                            <strong>Balance:</strong> ${data.balance} <br>
-                        </div>`;
-                } else {
-                    resultDiv.innerHTML = <div class="alert alert-danger">House not found.</div>;
-                }
-            } catch (error) {
-                resultDiv.innerHTML = <div class="alert alert-danger">Error fetching data.</div>;
-            }
+        if (data.balance !== undefined) {
+            resultDiv.innerHTML = `
+                <div class="alert alert-success">
+                    <strong>House:</strong> ${houseName} <br>
+                    <strong>Balance:</strong> ${data.balance} <br>
+                </div>`;
+        } else {
+            resultDiv.innerHTML = `<div class="alert alert-danger">House not found.</div>`;
         }
+    } catch (error) {
+        resultDiv.innerHTML = `<div class="alert alert-danger">Error fetching data.</div>`;
+    }
+}
 
-        // Fetch full list of data for the logged-in house
-        async function loadHouseDataList(houseName) {
-            const resultDiv = document.getElementById("houseDataList");
+// Fetch full list of data for the logged-in house
+async function loadHouseDataList(houseName) {
+    const resultDiv = document.getElementById("houseDataList");
 
-            try {
-                const response = await fetch(${scriptURL}?action=getHouseDataList&house=${encodeURIComponent(houseName)});
-                const data = await response.json();
+    try {
+        const response = await fetch(`${scriptURL}?action=getHouseDataList&house=${encodeURIComponent(houseName)}`);
+        const data = await response.json();
 
-                if (data.length > 0) {
-                    let listHTML = `<table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Record</th>
-                                <th>Amount</th>
-                                <th>Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>`;
+        if (data.length > 0) {
+            let listHTML = `<table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Record</th>
+                        <th>Amount</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>`;
 
-                    data.forEach((record, index) => {
-                        listHTML += `
-                            <tr>
-                                <td>${index + 1}</td>
-                                <td>${record.record}</td>
-                                <td>${record.amount}</td>
-                                <td>${record.date}</td>
-                            </tr>`;
-                    });
+            data.forEach((record, index) => {
+                listHTML += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${record.record}</td>
+                        <td>${record.amount}</td>
+                        <td>${record.date}</td>
+                    </tr>`;
+            });
 
-                    listHTML += </tbody></table>;
-                    resultDiv.innerHTML = listHTML;
-                } else {
-                    resultDiv.innerHTML = <div class="alert alert-warning">No records found for this house.</div>;
-                }
-            } catch (error) {
-                resultDiv.innerHTML = <div class="alert alert-danger">Error fetching data.</div>;
-            }
+            listHTML += `</tbody></table>`;
+            resultDiv.innerHTML = listHTML;
+        } else {
+            resultDiv.innerHTML = `<div class="alert alert-warning">No records found for this house.</div>`;
         }
+    } catch (error) {
+        resultDiv.innerHTML = `<div class="alert alert-danger">Error fetching data.</div>`;
+    }
+}
 
         // Handle logout
         function logout() {
